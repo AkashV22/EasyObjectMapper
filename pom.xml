@@ -29,10 +29,10 @@
     </build>
 
     <distributionManagement>
-        <repository>
-            <id>bintray-akashv22-EasyObjectMapper</id>
-            <name>akashv22-EasyObjectMapper</name>
-            <url>https://api.bintray.com/maven/akashv22/EasyObjectMapper/easyobjectmapper/;publish=1</url>
-        </repository>
+        <snapshotRepository>
+            <id>bintray-akashv22-akashv22-snapshots</id>
+            <name>AkashV22-akashv22-snapshots</name>
+            <url>https://api.bintray.com/maven/akashv22/akashv22-snapshots/EasyObjectMapper/;publish=1</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>
