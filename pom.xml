@@ -27,12 +27,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>bintray-akashv22-akashv22-snapshots</id>
-            <name>AkashV22-akashv22-snapshots</name>
-            <url>https://api.bintray.com/maven/akashv22/akashv22-snapshots/EasyObjectMapper/;publish=1</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
