@@ -1,5 +1,6 @@
 package com.theakashv22.util.easyobjectmapper;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public class EasyObjectMapper<S, T> implements Mapper<S, T> {
@@ -7,6 +8,10 @@ public class EasyObjectMapper<S, T> implements Mapper<S, T> {
 
     public EasyObjectMapper(Collection<? extends Mapper<S, T>> mappers) {
         this.mappers = mappers;
+    }
+
+    public EasyObjectMapper(Mapper<S, T>... mappers) {
+        this(Arrays.asList(mappers));
     }
 
     public void map(S source, T target) {
