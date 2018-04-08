@@ -40,8 +40,12 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP> extends S
         } else {
             targetProperty = getPropertyFromTarget(target);
         }
-        setPropertyToTarget(target, targetProperty);
         mappers.forEach(mapper -> mapper.map(sourceProperty, targetProperty));
+    }
+
+    @Override
+    protected void setPropertyToTarget(T target, TP targetProperty) {
+        throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
 
     @Override

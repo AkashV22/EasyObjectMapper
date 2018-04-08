@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddSingleToCollectionPropertyMapperTest {
     @Test
-    public void testAddSingleToCollectionPropertyMapperUsingDefaultConstructor() {
-        testAddSingleToCollectionPropertyMapperWithoutClearingTargetProperty(
+    public void testMapperUsingDefaultConstructor() {
+        testMapperWithoutClearingTargetProperty(
                 new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
                     @Override
                     protected Integer getPropertyFromSource(Source source) {
@@ -32,22 +32,22 @@ public class AddSingleToCollectionPropertyMapperTest {
     }
 
     @Test
-    public void testAddSingleToCollectionPropertyMapperWithoutClearingTargetProperty() {
-        testAddSingleToCollectionPropertyMapperWithoutClearingTargetProperty(createMapper(false));
+    public void testMapperWithoutClearingTargetProperty() {
+        testMapperWithoutClearingTargetProperty(createMapper(false));
     }
 
     @Test
-    public void testAddSingleToCollectionPropertyMapperWhileClearingTargetProperty() {
-        testAddSingleToListPropertyMapper(
+    public void testMapperWhileClearingTargetProperty() {
+        testMapper(
                 createMapper(true),
                 Collections.singletonList("10")
         );
     }
 
-    private void testAddSingleToCollectionPropertyMapperWithoutClearingTargetProperty(
+    private void testMapperWithoutClearingTargetProperty(
             AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper
     ) {
-        testAddSingleToListPropertyMapper(mapper, Arrays.asList("5", "10"));
+        testMapper(mapper, Arrays.asList("5", "10"));
     }
 
     private AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> createMapper(
@@ -71,7 +71,7 @@ public class AddSingleToCollectionPropertyMapperTest {
         };
     }
 
-    private void testAddSingleToListPropertyMapper(
+    private void testMapper(
             AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper,
             Collection<String> expectedTargetPropertyValue
     ) {
