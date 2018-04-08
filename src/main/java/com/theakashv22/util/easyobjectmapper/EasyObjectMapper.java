@@ -19,20 +19,40 @@ package com.theakashv22.util.easyobjectmapper;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * This is the root object mapper that will map properties from an object of type {@link S} to an object of type
+ * {@link T} upon calling {@link EasyObjectMapper#map(Object, Object)} using the supplied {@code innerMappers}.
+ * @param <S> the type of the {@code source} object to map properties from
+ * @param <T> the type of the {@code target} object to map properties to
+ */
 public class EasyObjectMapper<S, T> implements Mapper<S, T> {
-    private final Collection<? extends Mapper<S, T>> mappers;
+    private final Collection<? extends Mapper<S, T>> innerMappers;
 
-    public EasyObjectMapper(Collection<? extends Mapper<S, T>> mappers) {
-        this.mappers = mappers;
+    /**
+     * Constructor for {@link EasyObjectMapper} that takes a {@link Collection} of {@code innerMappers}.
+     * @param innerMappers the {@link Mapper} {@linkplain Collection} containing mappers to map the properties of
+     * {@code source} to {@code target}
+     */
+    public EasyObjectMapper(Collection<? extends Mapper<S, T>> innerMappers) {
+        this.innerMappers = innerMappers;
     }
 
+    /**
+     * Constructor for {@link EasyObjectMapper} that takes {@code innerMappers} via a vararg parameter.
+     * @param innerMappers the {@link Mapper} objects to map the properties of {@code source} to {@code target}
+     */
     @SafeVarargs
-    public EasyObjectMapper(Mapper<S, T>... mappers) {
-        this(Arrays.asList(mappers));
+    public EasyObjectMapper(Mapper<S, T>... innerMappers) {
+        this(Arrays.asList(innerMappers));
     }
 
+    /**
+     * Map the properties from {@code source} to {@code target} using the supplied {@code innerMappers}.
+     * @param source the object of type {@link S} to map properties from
+     * @param target the object of type {@link T} to map properties to
+     */
     public void map(S source, T target) {
-        for (Mapper<S, T> mapper : mappers) {
+        for (Mapper<S, T> mapper : innerMappers) {
             mapper.map(source, target);
         }
     }
