@@ -82,4 +82,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-akashv22-maven</id>
+            <name>akashv22-maven</name>
+            <url>https://api.bintray.com/maven/akashv22/maven/EasyObjectMapper/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>
