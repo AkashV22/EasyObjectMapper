@@ -20,10 +20,12 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP> extends S
         this(CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT, mappers);
     }
 
+    @SafeVarargs
     public SourceToTargetObjectPropertyMapper(boolean convertSourceToTargetProperty, Mapper<SP, TP>... mappers) {
         this(convertSourceToTargetProperty, Arrays.asList(mappers));
     }
 
+    @SafeVarargs
     public SourceToTargetObjectPropertyMapper(Mapper<SP, TP>... mappers) {
         this(CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT, mappers);
     }

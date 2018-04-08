@@ -15,10 +15,12 @@ public abstract class SimpleObjectPropertyMapper<S, T, P> extends SourceToTarget
         super(mappers);
     }
 
+    @SafeVarargs
     public SimpleObjectPropertyMapper(boolean convertSourceToTargetProperty, Mapper<P, P>... mappers) {
         this(convertSourceToTargetProperty, Arrays.asList(mappers));
     }
 
+    @SafeVarargs
     public SimpleObjectPropertyMapper(Mapper<P, P>... mappers) {
         this(Arrays.asList(mappers));
     }

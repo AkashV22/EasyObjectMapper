@@ -10,6 +10,7 @@ public class EasyObjectMapper<S, T> implements Mapper<S, T> {
         this.mappers = mappers;
     }
 
+    @SafeVarargs
     public EasyObjectMapper(Mapper<S, T>... mappers) {
         this(Arrays.asList(mappers));
     }
