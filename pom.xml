@@ -10,6 +10,31 @@
 
     <name>EasyObjectMapper</name>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/AkashV22/EasyObjectMapper</url>
+        <connection>https://github.com/AkashV22/EasyObjectMapper.git</connection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>AkashV22</id>
+            <email>iakashv22@gmail.com</email>
+            <url>http://theakashv22.com</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>Europe/London</timezone>
+        </developer>
+    </developers>
+
     <properties>
         <java.version>1.8</java.version>
         <junit.version>5.1.0</junit.version>
