@@ -47,7 +47,7 @@ public class EasyObjectMapper<S, T> implements Mapper<S, T> {
     }
 
     /**
-     * Map the properties from {@code source} to {@code target} using the supplied {@code innerMappers}.
+     * Maps the properties from {@code source} to {@code target} using the supplied {@code innerMappers}.
      * @param source the object of type {@link S} to map properties from
      * @param target the object of type {@link T} to map properties to
      */
