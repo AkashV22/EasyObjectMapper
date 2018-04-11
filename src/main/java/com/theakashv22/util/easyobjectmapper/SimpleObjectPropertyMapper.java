@@ -19,7 +19,8 @@ package com.theakashv22.util.easyobjectmapper;
 import java.util.Arrays;
 import java.util.Collection;
 
-public abstract class SimpleObjectPropertyMapper<S, T, P> extends SourceToTargetObjectPropertyMapper<S, P, T, P> {
+public abstract class SimpleObjectPropertyMapper<S, T, P> extends SourceToTargetObjectPropertyMapper<S, P, T, P>
+        implements Mapper<S, T> {
     public SimpleObjectPropertyMapper(
             boolean convertSourceToTargetProperty,
             Collection<? extends Mapper<P, P>> mappers

@@ -20,9 +20,9 @@ package com.theakashv22.util.easyobjectmapper;
  * This mapper will map a property of type {@link SP} from a {@code source} object of type {@link S} to a property of
  * type {@link TP} in a {@code target} object of type {@link T} when
  * {@link SourceToTargetPropertyMapper#map(Object, Object)} is called.
- * @param <S> the type of the {@code source} object to map the property of type {@linkplain SP} from
+ * @param <S> the type of the {@code source} object to map the property of type {@link SP} from
  * @param <SP> the type of the property in the {@code source} object to map from
- * @param <T> the type of the {@code target} object to map property of type {@linkplain TP} to
+ * @param <T> the type of the {@code target} object to map property of type {@link TP} to
  * @param <TP> the type of the property in the {@code target} object to map to
  */
 public abstract class SourceToTargetPropertyMapper<S, SP, T, TP> implements Mapper<S, T> {
@@ -50,7 +50,7 @@ public abstract class SourceToTargetPropertyMapper<S, SP, T, TP> implements Mapp
     /**
      * Sets the property to map to in {@code target}.
      * @param target the object of type {@link T} to set the property to
-     * @param targetProperty the property of type {@link TP} to map in {@code target}.
+     * @param targetProperty the property of type {@link TP} to map in {@code target}
      */
     protected abstract void setPropertyToTarget(T target, TP targetProperty);
 

@@ -18,6 +18,17 @@ package com.theakashv22.util.easyobjectmapper;
 
 import java.util.Collection;
 
+/**
+ * This mapper will add the value of a property of type {@link SP} from a {@code source} object of type {@link S} into a
+ * {@link Collection} property of type {@link TP} in a {@code target} object of type {@link T} when
+ * {@link AddSingleToCollectionPropertyMapper#map(Object, Object)} is called.
+ * @param <S> the type of the {@code source} object to obtain the property of type {@link SP} from
+ * @param <SP> the type of the property in the {@code source} object to map from
+ * @param <T> the type of the {@code target} object that contains the {@link Collection} property of type
+ * {@link TP}
+ * @param <TP> the type of the {@link Collection} property in the {@code target} object to add to
+ */
+// TODO FINISH THE JAVADOC IN THIS CLASS
 public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implements Mapper<S, T> {
     private final boolean clearCollectionUponAdding;
 
