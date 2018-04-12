@@ -21,25 +21,40 @@ import java.util.Collection;
 /**
  * This mapper will add the value of a property of type {@link SP} from a {@code source} object of type {@link S} into a
  * {@link Collection} property of type {@link TP} in a {@code target} object of type {@link T} when
- * {@link AddSingleToCollectionPropertyMapper#map(Object, Object)} is called.
+ * {@link #map(Object, Object)} is called.
  * @param <S> the type of the {@code source} object to obtain the property of type {@link SP} from
  * @param <SP> the type of the property in the {@code source} object to map from
- * @param <T> the type of the {@code target} object that contains the {@link Collection} property of type
- * {@link TP}
+ * @param <T> the type of the {@code target} object that contains the {@link Collection} property of type {@link TP}
  * @param <TP> the type of the {@link Collection} property in the {@code target} object to add to
  */
-// TODO FINISH THE JAVADOC IN THIS CLASS
 public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implements Mapper<S, T> {
     private final boolean clearCollectionUponAdding;
 
+    /**
+     * The no-arg constructor of {@link AddSingleToCollectionPropertyMapper}. This calls
+     * {@link #AddSingleToCollectionPropertyMapper(boolean)} and sets {@code clearCollectionUponAdding} to
+     * {@code false}.
+     */
     public AddSingleToCollectionPropertyMapper() {
         this(false);
     }
 
+    /**
+     * The main constructor of {@link AddSingleToCollectionPropertyMapper}.
+     * @param clearCollectionUponAdding if {@code true}, the {@link Collection} property is cleared when adding to it.
+     */
     public AddSingleToCollectionPropertyMapper(boolean clearCollectionUponAdding) {
         this.clearCollectionUponAdding = clearCollectionUponAdding;
     }
 
+    /**
+     * Adds the property obtained by {@link #getPropertyFromSource(Object)} to the {@link Collection} property obtained
+     * by {@link #getPropertyFromTarget(Object)}.<br><br>
+     * Any type conversion is done by {@link #convert(Object)}.
+     * @param source the object of type {@link S} to obtain the {@code sourceProperty} from
+     * @param target the object of type {@link T} that contains the {@link Collection} property to add the
+     * {@code targetProperty} to
+     */
     public void map(S source, T target) {
         SP sourceProperty = getPropertyFromSource(source);
         TP targetProperty = convert(sourceProperty);
@@ -53,7 +68,24 @@ public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implemen
         targetPropertyCollection.add(targetProperty);
     }
 
+    /**
+     * Returns the {@code sourceProperty} in {@code source}.
+     * @param source the object of type {@link S} to obtain the property from
+     * @return the property of type {@link SP} in {@code source}
+     */
     protected abstract SP getPropertyFromSource(S source);
+
+    /**
+     * Returns the {@link Collection} property in the {@code target} object to add to.
+     * @param target the object of type {@link T} to obtain the {@link Collection} property from
+     * @return the {@link Collection} property of type {@link TP} to add to
+     */
     protected abstract Collection<TP> getPropertyFromTarget(T target);
+
+    /**
+     * Converts the {@code sourceProperty} to the {@code targetProperty} and returns the latter.
+     * @param sourceProperty the property of type {@link SP} to convert
+     * @return the property of type {@link TP} to convert to
+     */
     protected abstract TP convert(SP sourceProperty);
 }
