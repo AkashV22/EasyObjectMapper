@@ -19,34 +19,91 @@ package com.theakashv22.util.easyobjectmapper;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * This mapper will map an object property of type {@link SP} from a {@code source} object of type {@link S} to an
+ * object property of type {@link TP} in a {@code target} object of type {@link T} when {@link #map(Object, Object)} is
+ * called. Also, this will call any supplied {@code innerMappers} during mapping.
+ * @param <S> the type of the {@code source} object to map the object property of type {@link SP} from
+ * @param <SP> the type of the object property in the {@code source} object to map from
+ * @param <T> the type of the {@code target} object to map the object property of type {@link TP} to
+ * @param <TP> the type of the object property in the {@code target} object to map to
+ */
+// TODO FINISH JAVADOC COMMENTS IN THIS CLASS
 public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
         extends SourceToTargetPropertyMapper<S, SP, T, TP> implements Mapper<S, T> {
     private static final boolean CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT = false;
     private final boolean convertSourceToTargetProperty;
-    private final Collection<? extends Mapper<SP, TP>> mappers;
+    private final Collection<? extends Mapper<SP, TP>> innerMappers;
 
+    /**
+     * The main constructor for {@link SourceToTargetPropertyMapper}.<br><br>
+     * If {@code convertSourceToTargetProperty} is set to {@code true}, then {@link #convert(Object)} and
+     * {@link #setPropertyToTarget(Object, Object)} must be overridden, otherwise,
+     * {@link #getPropertyFromTarget(Object)} must be overridden.
+     * @param convertSourceToTargetProperty determines whether the source object property should be converted to the
+     *                                      target object property when {@link #map(Object, Object)} is called
+     * @param innerMappers the mappers for mapping properties from the source object property to the target object
+     *                     property
+     */
     public SourceToTargetObjectPropertyMapper(
             boolean convertSourceToTargetProperty,
-            Collection<? extends Mapper<SP, TP>> mappers
+            Collection<? extends Mapper<SP, TP>> innerMappers
     ) {
         this.convertSourceToTargetProperty = convertSourceToTargetProperty;
-        this.mappers = mappers;
+        this.innerMappers = innerMappers;
     }
 
-    public SourceToTargetObjectPropertyMapper(Collection<? extends Mapper<SP, TP>> mappers) {
-        this(CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT, mappers);
+    /**
+     * The constructor for {@link SourceToTargetPropertyMapper} that calls
+     * {@link #SourceToTargetObjectPropertyMapper(boolean, Collection)} and sets {@code convertSourceToTargetProperty}
+     * to {@value #CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT}.<br><br>
+     * When using this constructor, {@link #getPropertyFromTarget(Object)} must be overridden.
+     * @param innerMappers the mappers for mapping properties from the source object property to the target object
+     *                     property
+     */
+    public SourceToTargetObjectPropertyMapper(Collection<? extends Mapper<SP, TP>> innerMappers) {
+        this(CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT, innerMappers);
     }
 
+    /**
+     * The constructor for {@link SourceToTargetPropertyMapper} that calls
+     * {@link #SourceToTargetObjectPropertyMapper(boolean, Collection)} and converts the {@code innerMappers} vararg
+     * parameter into a {@link Collection}.<br><br>
+     * If {@code convertSourceToTargetProperty} is set to {@code true}, then {@link #convert(Object)} and
+     * {@link #setPropertyToTarget(Object, Object)} must be overridden, otherwise,
+     * {@link #getPropertyFromTarget(Object)} must be overridden.
+     * @param convertSourceToTargetProperty determines whether the source object property should be converted to the
+     *                                      target object property when {@link #map(Object, Object)} is called
+     * @param innerMappers the mappers for mapping properties from the source object property to the target object
+     *                     property
+     */
     @SafeVarargs
-    public SourceToTargetObjectPropertyMapper(boolean convertSourceToTargetProperty, Mapper<SP, TP>... mappers) {
-        this(convertSourceToTargetProperty, Arrays.asList(mappers));
+    public SourceToTargetObjectPropertyMapper(boolean convertSourceToTargetProperty, Mapper<SP, TP>... innerMappers) {
+        this(convertSourceToTargetProperty, Arrays.asList(innerMappers));
     }
 
+    /**
+     * The constructor for {@link SourceToTargetPropertyMapper} that calls
+     * {@link #SourceToTargetObjectPropertyMapper(boolean, Mapper[])} and sets {@code convertSourceToTargetProperty}
+     * to {@value #CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT}.<br><br>
+     * When using this constructor, {@link #getPropertyFromTarget(Object)} must be overridden.
+     * @param innerMappers the mappers for mapping properties from the source object property to the target object
+     *                     property
+     */
     @SafeVarargs
-    public SourceToTargetObjectPropertyMapper(Mapper<SP, TP>... mappers) {
-        this(CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT, mappers);
+    public SourceToTargetObjectPropertyMapper(Mapper<SP, TP>... innerMappers) {
+        this(CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT, innerMappers);
     }
 
+    /**
+     * Maps the object property from {@code source} obtained by {@link #getPropertyFromSource(Object)} to that in
+     * {@code target} set by {@link #setPropertyToTarget(Object, Object)}.<br><br>
+     * Any type conversion is done by {@link #convert(Object)}, and this will also call
+     * {@link Mapper#map(Object, Object)} in all {@code innerMappers} supplied into one of the constructors of
+     * {@link SourceToTargetPropertyMapper}.
+     * @param source the object of type {@link S} to map the object property from
+     * @param target the object of type {@link T} to map object property to
+     */
     @Override
     public void map(S source, T target) {
         SP sourceProperty = getPropertyFromSource(source);
@@ -57,7 +114,7 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
         } else {
             targetProperty = getPropertyFromTarget(target);
         }
-        mappers.forEach(mapper -> mapper.map(sourceProperty, targetProperty));
+        innerMappers.forEach(mapper -> mapper.map(sourceProperty, targetProperty));
     }
 
     @Override

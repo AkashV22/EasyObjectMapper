@@ -18,7 +18,7 @@ package com.theakashv22.util.easyobjectmapper;
 
 /**
  * This mapper will map a property of type {@link P} from a {@code source} object of type {@link S} to a property of
- * the same type in a {@code target} object of type {@link T} when {@link SimplePropertyMapper#map(Object, Object)}
+ * the same type in a {@code target} object of type {@link T} when {@link #map(Object, Object)}
  * is called.
  * @param <S> the type of the {@code source} object to map the property of type {@link P} from
  * @param <T> the type of the {@code target} object to map property of type {@link P} to

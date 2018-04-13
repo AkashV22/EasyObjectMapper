@@ -21,7 +21,7 @@ import java.util.Collection;
 
 /**
  * This is the root object mapper that will map properties from an object of type {@link S} to an object of type
- * {@link T} upon calling {@link EasyObjectMapper#map(Object, Object)} using the supplied {@code innerMappers}.
+ * {@link T} upon calling {@link #map(Object, Object)} using the supplied {@code innerMappers}.
  * @param <S> the type of the {@code source} object to map properties from
  * @param <T> the type of the {@code target} object to map properties to
  */

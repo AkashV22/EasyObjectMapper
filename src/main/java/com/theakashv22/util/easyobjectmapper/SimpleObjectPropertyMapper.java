@@ -23,23 +23,23 @@ public abstract class SimpleObjectPropertyMapper<S, T, P> extends SourceToTarget
         implements Mapper<S, T> {
     public SimpleObjectPropertyMapper(
             boolean convertSourceToTargetProperty,
-            Collection<? extends Mapper<P, P>> mappers
+            Collection<? extends Mapper<P, P>> innerMappers
     ) {
-        super(convertSourceToTargetProperty, mappers);
+        super(convertSourceToTargetProperty, innerMappers);
     }
 
-    public SimpleObjectPropertyMapper(Collection<? extends Mapper<P, P>> mappers) {
-        super(mappers);
-    }
-
-    @SafeVarargs
-    public SimpleObjectPropertyMapper(boolean convertSourceToTargetProperty, Mapper<P, P>... mappers) {
-        this(convertSourceToTargetProperty, Arrays.asList(mappers));
+    public SimpleObjectPropertyMapper(Collection<? extends Mapper<P, P>> innerMappers) {
+        super(innerMappers);
     }
 
     @SafeVarargs
-    public SimpleObjectPropertyMapper(Mapper<P, P>... mappers) {
-        this(Arrays.asList(mappers));
+    public SimpleObjectPropertyMapper(boolean convertSourceToTargetProperty, Mapper<P, P>... innerMappers) {
+        this(convertSourceToTargetProperty, Arrays.asList(innerMappers));
+    }
+
+    @SafeVarargs
+    public SimpleObjectPropertyMapper(Mapper<P, P>... innerMappers) {
+        this(Arrays.asList(innerMappers));
     }
 
     @Override
