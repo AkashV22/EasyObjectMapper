@@ -29,7 +29,7 @@ public class EasyObjectMapper<S, T> implements Mapper<S, T> {
     private final Collection<? extends Mapper<S, T>> innerMappers;
 
     /**
-     * Constructor for {@link EasyObjectMapper} that takes a {@link Collection} of {@code innerMappers}.
+     * Constructor of {@link EasyObjectMapper} that takes a {@link Collection} of {@code innerMappers}.
      * @param innerMappers the {@link Mapper} {@link Collection} containing mappers to map the properties of
      * {@code source} to {@code target}
      */
@@ -38,7 +38,7 @@ public class EasyObjectMapper<S, T> implements Mapper<S, T> {
     }
 
     /**
-     * Constructor for {@link EasyObjectMapper} that takes {@code innerMappers} via a vararg parameter.
+     * Constructor of {@link EasyObjectMapper} that takes {@code innerMappers} via a vararg parameter.
      * @param innerMappers the {@link Mapper} objects to map the properties of {@code source} to {@code target}
      */
     @SafeVarargs

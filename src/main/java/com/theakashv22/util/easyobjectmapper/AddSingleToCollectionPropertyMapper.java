@@ -31,7 +31,7 @@ public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implemen
     private final boolean clearCollectionUponAdding;
 
     /**
-     * The no-arg constructor of {@link AddSingleToCollectionPropertyMapper}. This calls
+     * No-arg constructor of {@link AddSingleToCollectionPropertyMapper}. This calls
      * {@link #AddSingleToCollectionPropertyMapper(boolean)} and sets {@code clearCollectionUponAdding} to
      * {@code false}.
      */
@@ -40,7 +40,7 @@ public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implemen
     }
 
     /**
-     * The main constructor of {@link AddSingleToCollectionPropertyMapper}.
+     * Main constructor of {@link AddSingleToCollectionPropertyMapper}.
      * @param clearCollectionUponAdding if {@code true}, the {@link Collection} property is cleared when adding to it.
      */
     public AddSingleToCollectionPropertyMapper(boolean clearCollectionUponAdding) {
@@ -50,7 +50,9 @@ public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implemen
     /**
      * Adds the property obtained by {@link #getPropertyFromSource(Object)} to the {@link Collection} property obtained
      * by {@link #getPropertyFromTarget(Object)}.<br><br>
-     * Any type conversion is done by {@link #convert(Object)}.
+     * Any type conversion is done by {@link #convert(Object)}, and the {@link Collection} property is cleared before
+     * the converted property is added to it if {@code clearCollectionUponAdding} is set to {@code true} in the
+     * constructor used to create this mapper.
      * @param source the object of type {@link S} to obtain the {@code sourceProperty} from
      * @param target the object of type {@link T} that contains the {@link Collection} property to add the
      * {@code targetProperty} to

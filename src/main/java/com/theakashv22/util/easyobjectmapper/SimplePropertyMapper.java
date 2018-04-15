@@ -21,7 +21,7 @@ package com.theakashv22.util.easyobjectmapper;
  * the same type in a {@code target} object of type {@link T} when {@link #map(Object, Object)}
  * is called.
  * @param <S> the type of the {@code source} object to map the property of type {@link P} from
- * @param <T> the type of the {@code target} object to map property of type {@link P} to
+ * @param <T> the type of the {@code target} object to map the property of type {@link P} to
  * @param <P> the type of the property in the {@code source} and {@code target} objects to map between
  */
 public abstract class SimplePropertyMapper<S, T, P> extends SourceToTargetPropertyMapper<S, P, T, P>

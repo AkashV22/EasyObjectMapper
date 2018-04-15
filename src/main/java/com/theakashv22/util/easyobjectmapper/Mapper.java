@@ -17,7 +17,7 @@
 package com.theakashv22.util.easyobjectmapper;
 
 /**
- * This is an interface for mapping the properties of an object of type {@link S} to an object of type {@link T}.
+ * This is an interface for mapping the properties from an object of type {@link S} to an object of type {@link T}.
  * @param <S> the type of the {@code source} object to map properties from
  * @param <T> the type of the {@code target} object to map properties to
  */

@@ -28,15 +28,15 @@ import java.util.Collection;
  * @param <T> the type of the {@code target} object to map the object property of type {@link TP} to
  * @param <TP> the type of the object property in the {@code target} object to map to
  */
-// TODO FINISH JAVADOC COMMENTS IN THIS CLASS
 public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
         extends SourceToTargetPropertyMapper<S, SP, T, TP> implements Mapper<S, T> {
-    private static final boolean CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT = false;
+    @SuppressWarnings("WeakerAccess")
+    protected static final boolean CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT = false;
     private final boolean convertSourceToTargetProperty;
     private final Collection<? extends Mapper<SP, TP>> innerMappers;
 
     /**
-     * The main constructor for {@link SourceToTargetPropertyMapper}.<br><br>
+     * Main constructor of {@link SourceToTargetObjectPropertyMapper}.<br><br>
      * If {@code convertSourceToTargetProperty} is set to {@code true}, then {@link #convert(Object)} and
      * {@link #setPropertyToTarget(Object, Object)} must be overridden, otherwise,
      * {@link #getPropertyFromTarget(Object)} must be overridden.
@@ -54,7 +54,7 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
     }
 
     /**
-     * The constructor for {@link SourceToTargetPropertyMapper} that calls
+     * Constructor of {@link SourceToTargetObjectPropertyMapper} that calls
      * {@link #SourceToTargetObjectPropertyMapper(boolean, Collection)} and sets {@code convertSourceToTargetProperty}
      * to {@value #CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT}.<br><br>
      * When using this constructor, {@link #getPropertyFromTarget(Object)} must be overridden.
@@ -66,7 +66,7 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
     }
 
     /**
-     * The constructor for {@link SourceToTargetPropertyMapper} that calls
+     * Constructor of {@link SourceToTargetObjectPropertyMapper} that calls
      * {@link #SourceToTargetObjectPropertyMapper(boolean, Collection)} and converts the {@code innerMappers} vararg
      * parameter into a {@link Collection}.<br><br>
      * If {@code convertSourceToTargetProperty} is set to {@code true}, then {@link #convert(Object)} and
@@ -83,7 +83,7 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
     }
 
     /**
-     * The constructor for {@link SourceToTargetPropertyMapper} that calls
+     * Constructor of {@link SourceToTargetObjectPropertyMapper} that calls
      * {@link #SourceToTargetObjectPropertyMapper(boolean, Mapper[])} and sets {@code convertSourceToTargetProperty}
      * to {@value #CONVERT_SOURCE_TO_TARGET_PROPERTY_DEFAULT}.<br><br>
      * When using this constructor, {@link #getPropertyFromTarget(Object)} must be overridden.
@@ -100,7 +100,7 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
      * {@code target} set by {@link #setPropertyToTarget(Object, Object)}.<br><br>
      * Any type conversion is done by {@link #convert(Object)}, and this will also call
      * {@link Mapper#map(Object, Object)} in all {@code innerMappers} supplied into one of the constructors of
-     * {@link SourceToTargetPropertyMapper}.
+     * {@link SourceToTargetObjectPropertyMapper}.
      * @param source the object of type {@link S} to map the object property from
      * @param target the object of type {@link T} to map object property to
      */
@@ -117,16 +117,37 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
         innerMappers.forEach(mapper -> mapper.map(sourceProperty, targetProperty));
     }
 
+    /**
+     * Sets the object property to map to in {@code target}.<br><br>
+     * If {@code convertSourceToTargetProperty} is set to {@code true} in the constructor used to create this mapper
+     * then this method must be overridden.
+     * @param target the object of type {@link T} to set the object property to
+     * @param targetProperty the object property of type {@link TP} to map in {@code target}
+     */
     @Override
     protected void setPropertyToTarget(T target, TP targetProperty) {
         throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
 
+    /**
+     * Converts the {@code sourceProperty} to the {@code targetProperty} and returns the latter.<br><br>
+     * If {@code convertSourceToTargetProperty} is set to {@code true} in the constructor used to create this mapper
+     * then this method must be overridden.
+     * @param sourceProperty the property of type {@link SP} to convert
+     * @return the property of type {@link TP} to convert to
+     */
     @Override
     protected TP convert(SP sourceProperty) {
         throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
 
+    /**
+     * Returns the object property in {@code target} to map to.<br><br>
+     * If {@code convertSourceToTargetProperty} is set to {@code false} in the constructor used to create this mapper
+     * then this method must be overridden.
+     * @param target the object of type {@link T} to obtain the object property from
+     * @return the object property of type {@link TP} in {@code source} to map to
+     */
     protected TP getPropertyFromTarget(T target) {
         throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
