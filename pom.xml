@@ -6,7 +6,7 @@
 
     <groupId>com.theakashv22.util</groupId>
     <artifactId>easy-object-mapper</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <name>EasyObjectMapper</name>
     <description>Simple Java object-to-object mapping without reflection.</description>
