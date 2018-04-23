@@ -19,6 +19,7 @@ package com.theakashv22.util.easyobjectmapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SimplePropertyMapperTest {
 
@@ -37,12 +38,59 @@ public class SimplePropertyMapperTest {
             }
         };
 
+        Target target = createSourceAndTargetThenMap(mapper);
+
+        assertEquals("Team, unite up!", target.getTargetProperty());
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfGetPropertyFromSourceThrowsException() {
+        SimplePropertyMapper<Source, Target, String> mapper =
+                new SimplePropertyMapper<Source, Target, String>() {
+                    @Override
+                    protected String getPropertyFromSource(Source source) throws Exception {
+                        throw new Exception();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, String targetProperty) {
+                        target.setTargetProperty(targetProperty);
+                    }
+                };
+
+        mapAndAssertThrows(mapper);
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfSetPropertyToTargetThrowsException() {
+        SimplePropertyMapper<Source, Target, String> mapper =
+                new SimplePropertyMapper<Source, Target, String>() {
+                    @Override
+                    protected String getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, String targetProperty) throws Exception {
+                        throw new Exception();
+                    }
+                };
+
+        mapAndAssertThrows(mapper);
+    }
+
+    private void mapAndAssertThrows(SimplePropertyMapper<Source, Target, String> mapper) {
+        assertThrows(Exception.class, () -> createSourceAndTargetThenMap(mapper));
+    }
+
+    private Target createSourceAndTargetThenMap(SimplePropertyMapper<Source, Target, String> mapper)
+            throws Exception {
         Source source = new Source("Team, unite up!");
         Target target = new Target();
 
         mapper.map(source, target);
 
-        assertEquals("Team, unite up!", target.getTargetProperty());
+        return target;
     }
 
     private static class Source {

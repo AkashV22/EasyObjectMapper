@@ -19,6 +19,7 @@ package com.theakashv22.util.easyobjectmapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SourceToTargetPropertyMapperTest {
     @Test
@@ -41,12 +42,92 @@ public class SourceToTargetPropertyMapperTest {
             }
         };
 
+        Target target = createSourceAndTargetThenMap(mapper);
+
+        assertEquals("10", target.getTargetProperty());
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfGetPropertyFromSourceThrowsException() {
+        SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper =
+                new SourceToTargetPropertyMapper<Source, Integer, Target, String>() {
+                    @Override
+                    protected Integer getPropertyFromSource(Source source) throws Exception {
+                        throw new Exception();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, String targetProperty) {
+                        target.setTargetProperty(targetProperty);
+                    }
+
+                    @Override
+                    protected String convert(Integer sourceProperty) {
+                        return sourceProperty != null ? sourceProperty.toString() : null;
+                    }
+                };
+
+        mapAndAssertThrows(mapper);
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfSetPropertyToTargetThrowsException() {
+        SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper =
+                new SourceToTargetPropertyMapper<Source, Integer, Target, String>() {
+                    @Override
+                    protected Integer getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, String targetProperty) throws Exception {
+                        throw new Exception();
+                    }
+
+                    @Override
+                    protected String convert(Integer sourceProperty) {
+                        return sourceProperty != null ? sourceProperty.toString() : null;
+                    }
+                };
+
+        mapAndAssertThrows(mapper);
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfConvertThrowsException() {
+        SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper =
+                new SourceToTargetPropertyMapper<Source, Integer, Target, String>() {
+                    @Override
+                    protected Integer getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, String targetProperty) {
+                        target.setTargetProperty(targetProperty);
+                    }
+
+                    @Override
+                    protected String convert(Integer sourceProperty) throws Exception {
+                        throw new Exception();
+                    }
+                };
+
+        mapAndAssertThrows(mapper);
+    }
+
+    private void mapAndAssertThrows(SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper) {
+        assertThrows(Exception.class, () -> createSourceAndTargetThenMap(mapper));
+    }
+
+    private Target createSourceAndTargetThenMap(SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper)
+            throws Exception {
         Source source = new Source(10);
         Target target = new Target();
 
         mapper.map(source, target);
 
-        assertEquals("10", target.getTargetProperty());
+        return target;
     }
 
     private static class Source {
