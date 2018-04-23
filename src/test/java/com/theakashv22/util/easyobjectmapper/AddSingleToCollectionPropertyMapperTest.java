@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AddSingleToCollectionPropertyMapperTest {
     @Test
-    public void testMapperUsingDefaultConstructor() {
+    public void testMapperUsingDefaultConstructor() throws Exception {
         testMapperWithoutClearingTargetProperty(
                 new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
                     @Override
@@ -48,12 +48,12 @@ public class AddSingleToCollectionPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWithoutClearingTargetProperty() {
+    public void testMapperWithoutClearingTargetProperty() throws Exception {
         testMapperWithoutClearingTargetProperty(createMapper(false));
     }
 
     @Test
-    public void testMapperWhileClearingTargetProperty() {
+    public void testMapperWhileClearingTargetProperty() throws Exception {
         testMapper(
                 createMapper(true),
                 Collections.singletonList("10")
@@ -62,7 +62,7 @@ public class AddSingleToCollectionPropertyMapperTest {
 
     private void testMapperWithoutClearingTargetProperty(
             AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper
-    ) {
+    ) throws Exception {
         testMapper(mapper, Arrays.asList("5", "10"));
     }
 
@@ -90,7 +90,7 @@ public class AddSingleToCollectionPropertyMapperTest {
     private void testMapper(
             AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper,
             Collection<String> expectedTargetPropertyValue
-    ) {
+    ) throws Exception {
         Source source = new Source(10);
         Target target = new Target();
         target.getTargetProperty().add("5");

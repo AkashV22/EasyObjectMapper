@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SimplePropertyMapperTest {
 
     @Test
-    public void testMapper() {
+    public void testMapper() throws Exception {
         SimplePropertyMapper<Source, Target, String> mapper =
                 new SimplePropertyMapper<Source, Target, String>() {
             @Override

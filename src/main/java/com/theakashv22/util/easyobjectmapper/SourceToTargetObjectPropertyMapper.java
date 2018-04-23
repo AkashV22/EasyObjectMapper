@@ -103,9 +103,11 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
      * {@link SourceToTargetObjectPropertyMapper}.
      * @param source the object of type {@link S} to map the object property from
      * @param target the object of type {@link T} to map object property to
+     * @throws Exception if mapping fails for any reason.
+     * @throws UnsupportedOperationException if the relevant methods in this class have not been overridden.
      */
     @Override
-    public void map(S source, T target) {
+    public void map(S source, T target) throws Exception {
         SP sourceProperty = getPropertyFromSource(source);
         TP targetProperty;
         if (convertSourceToTargetProperty) {
@@ -114,7 +116,10 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
         } else {
             targetProperty = getPropertyFromTarget(target);
         }
-        innerMappers.forEach(mapper -> mapper.map(sourceProperty, targetProperty));
+
+        for (Mapper<SP, TP> mapper : innerMappers) {
+            mapper.map(sourceProperty, targetProperty);
+        }
     }
 
     /**
@@ -123,9 +128,11 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
      * then this method must be overridden.
      * @param target the object of type {@link T} to set the object property to
      * @param targetProperty the object property of type {@link TP} to map in {@code target}
+     * @throws Exception if the property cannot be mapped to {@code target} for any reason.
+     * @throws UnsupportedOperationException if this method has not been overridden.
      */
     @Override
-    protected void setPropertyToTarget(T target, TP targetProperty) {
+    protected void setPropertyToTarget(T target, TP targetProperty) throws Exception {
         throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
 
@@ -135,9 +142,11 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
      * then this method must be overridden.
      * @param sourceProperty the property of type {@link SP} to convert
      * @return the property of type {@link TP} to convert to
+     * @throws Exception if property conversion fails for any reason.
+     * @throws UnsupportedOperationException if this method has not been overridden.
      */
     @Override
-    protected TP convert(SP sourceProperty) {
+    protected TP convert(SP sourceProperty) throws Exception {
         throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
 
@@ -147,8 +156,10 @@ public abstract class SourceToTargetObjectPropertyMapper<S, SP, T, TP>
      * then this method must be overridden.
      * @param target the object of type {@link T} to obtain the object property from
      * @return the object property of type {@link TP} in {@code source} to map to
+     * @throws Exception if the object property cannot be obtained from {@code target} for any reason.
+     * @throws UnsupportedOperationException if this method has not been overridden.
      */
-    protected TP getPropertyFromTarget(T target) {
+    protected TP getPropertyFromTarget(T target) throws Exception {
         throw new UnsupportedOperationException("This method must be overridden in order to be used.");
     }
 }

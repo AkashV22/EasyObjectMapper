@@ -56,8 +56,9 @@ public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implemen
      * @param source the object of type {@link S} to obtain the {@code sourceProperty} from
      * @param target the object of type {@link T} that contains the {@link Collection} property to add the
      * {@code targetProperty} to
+     * @throws Exception if mapping fails for any reason.
      */
-    public void map(S source, T target) {
+    public void map(S source, T target) throws Exception {
         SP sourceProperty = getPropertyFromSource(source);
         TP targetProperty = convert(sourceProperty);
 
@@ -74,20 +75,23 @@ public abstract class AddSingleToCollectionPropertyMapper<S, SP, T, TP> implemen
      * Returns the {@code sourceProperty} in {@code source}.
      * @param source the object of type {@link S} to obtain the property from
      * @return the property of type {@link SP} in {@code source}
+     * @throws Exception if the property cannot be obtained from {@code source} for any reason.
      */
-    protected abstract SP getPropertyFromSource(S source);
+    protected abstract SP getPropertyFromSource(S source) throws Exception;
 
     /**
      * Returns the {@link Collection} property in the {@code target} object to add to.
      * @param target the object of type {@link T} to obtain the {@link Collection} property from
      * @return the {@link Collection} property of type {@link TP} to add to
+     * @throws Exception if the {@link Collection} property cannot be obtained from {@code target} for any reason.
      */
-    protected abstract Collection<TP> getPropertyFromTarget(T target);
+    protected abstract Collection<TP> getPropertyFromTarget(T target) throws Exception;
 
     /**
      * Converts the {@code sourceProperty} to the {@code targetProperty} and returns the latter.
      * @param sourceProperty the property of type {@link SP} to convert
      * @return the property of type {@link TP} to convert to
+     * @throws Exception if property conversion fails for any reason.
      */
-    protected abstract TP convert(SP sourceProperty);
+    protected abstract TP convert(SP sourceProperty) throws Exception;
 }

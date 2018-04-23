@@ -17,7 +17,6 @@
 package com.theakashv22.util.easyobjectmapper;
 
 import java.util.Collections;
-import java.util.function.BiConsumer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SimpleObjectPropertyMapperTest {
     @Test
-    public void testMapperUsingVarargConstructor() {
+    public void testMapperUsingVarargConstructor() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(getInnerMapper()) {
                     @Override
@@ -43,7 +42,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperUsingCollectionConstructor() {
+    public void testMapperUsingCollectionConstructor() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         Collections.singletonList(getInnerMapper())
@@ -63,7 +62,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperUsingVarargConstructorAndConvertSourceToTargetPropertyFalse() {
+    public void testMapperUsingVarargConstructorAndConvertSourceToTargetPropertyFalse() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         false,
@@ -84,7 +83,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperUsingCollectionConstructorAndConvertSourceToTargetPropertyFalse() {
+    public void testMapperUsingCollectionConstructorAndConvertSourceToTargetPropertyFalse() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         false,
@@ -105,7 +104,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperUsingVarargConstructorAndConvertSourceToTargetPropertyTrue() {
+    public void testMapperUsingVarargConstructorAndConvertSourceToTargetPropertyTrue() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         true,
@@ -126,7 +125,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperUsingCollectionConstructorAndConvertSourceToTargetPropertyTrue() {
+    public void testMapperUsingCollectionConstructorAndConvertSourceToTargetPropertyTrue() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         true,
@@ -147,7 +146,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereSetPropertyToTargetIsNotImplemented() {
+    public void testMapperWhereSetPropertyToTargetIsNotImplemented() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         true,
@@ -159,7 +158,8 @@ public class SimpleObjectPropertyMapperTest {
                     }
 
                     @Override
-                    protected void setPropertyToTarget(Target target, InnerObjectProperty targetProperty) {
+                    protected void setPropertyToTarget(Target target, InnerObjectProperty targetProperty)
+                            throws Exception {
                         super.setPropertyToTarget(target, targetProperty);
                     }
                 };
@@ -168,7 +168,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereGetPropertyToTargetIsNotImplemented() {
+    public void testMapperWhereGetPropertyToTargetIsNotImplemented() throws Exception {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         false,
@@ -180,7 +180,7 @@ public class SimpleObjectPropertyMapperTest {
                     }
 
                     @Override
-                    protected InnerObjectProperty getPropertyFromTarget(Target target) {
+                    protected InnerObjectProperty getPropertyFromTarget(Target target) throws Exception {
                         return super.getPropertyFromTarget(target);
                     }
                 };
@@ -195,7 +195,7 @@ public class SimpleObjectPropertyMapperTest {
     private void testMapperWorksCorrectly(
             SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
             boolean setTargetPropertyToNewInnerObjectProperty
-    ) {
+    ) throws Exception {
         testMapper(setTargetPropertyToNewInnerObjectProperty, ((source, target) -> {
             mapper.map(source, target);
             assertEquals(10, target.getTargetProperty().getInnerProperty());
@@ -205,7 +205,7 @@ public class SimpleObjectPropertyMapperTest {
     private void testMapperThrowsUnsupportedOperationException(
             SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
             boolean setTargetPropertyToNewInnerObjectProperty
-    ) {
+    ) throws Exception {
         testMapper(setTargetPropertyToNewInnerObjectProperty, ((source, target) -> {
             assertThrows(UnsupportedOperationException.class, () -> mapper.map(source, target));
         }));
@@ -213,8 +213,8 @@ public class SimpleObjectPropertyMapperTest {
 
     private void testMapper(
             boolean setTargetPropertyToNewInnerObjectProperty,
-            BiConsumer<Source, Target> mapAndAssert
-    ) {
+            BiConsumerThatThrows<Source, Target> mapAndAssert
+    ) throws Exception {
         Source source = new Source(new InnerObjectProperty(10));
         Target target = new Target();
 

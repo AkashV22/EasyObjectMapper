@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EasyObjectMapperTest {
     @Test
-    public void testMapperUsingVarargConstructor() {
+    public void testMapperUsingVarargConstructor() throws Exception {
         Collection<Mapper<Source, Target>> innerMappers = createInnerMappers();
         @SuppressWarnings({"unchecked", "SuspiciousToArrayCall"})
         Mapper<Source, Target>[] innerMapperArr = (Mapper<Source, Target>[]) innerMappers.toArray(new Mapper[0]);
@@ -36,7 +36,7 @@ public class EasyObjectMapperTest {
     }
 
     @Test
-    public void testMapperUsingCollectionConstructor() {
+    public void testMapperUsingCollectionConstructor() throws Exception {
         testMapper(new EasyObjectMapper<>(createInnerMappers()));
     }
 
@@ -112,7 +112,7 @@ public class EasyObjectMapperTest {
         );
     }
 
-    private void testMapper(EasyObjectMapper<Source, Target> mapper) {
+    private void testMapper(EasyObjectMapper<Source, Target> mapper) throws Exception {
         Source source = new Source(new InnerSource(10, 1.1), new InnerObjectProperty(15));
         Target target = new Target();
 

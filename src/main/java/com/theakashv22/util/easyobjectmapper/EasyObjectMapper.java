@@ -50,8 +50,9 @@ public class EasyObjectMapper<S, T> implements Mapper<S, T> {
      * Maps the properties from {@code source} to {@code target} using the supplied {@code innerMappers}.
      * @param source the object of type {@link S} to map properties from
      * @param target the object of type {@link T} to map properties to
+     * @throws Exception if mapping fails for any reason.
      */
-    public void map(S source, T target) {
+    public void map(S source, T target) throws Exception {
         for (Mapper<S, T> mapper : innerMappers) {
             mapper.map(source, target);
         }

@@ -31,8 +31,9 @@ public abstract class SourceToTargetPropertyMapper<S, SP, T, TP> implements Mapp
      * Any type conversion is done by {@link #convert(Object)}.
      * @param source the object of type {@link S} to map the property from
      * @param target the object of type {@link T} to map property to
+     * @throws Exception if mapping fails for any reason.
      */
-    public void map(S source, T target) {
+    public void map(S source, T target) throws Exception {
         SP sourceProperty = getPropertyFromSource(source);
         TP targetProperty = convert(sourceProperty);
         setPropertyToTarget(target, targetProperty);
@@ -42,20 +43,23 @@ public abstract class SourceToTargetPropertyMapper<S, SP, T, TP> implements Mapp
      * Returns the property in {@code source} to map from.
      * @param source the object of type {@link S} to obtain the property from
      * @return the property of type {@link SP} in {@code source} to map
+     * @throws Exception if the property cannot be obtained from {@code source} for any reason.
      */
-    protected abstract SP getPropertyFromSource(S source);
+    protected abstract SP getPropertyFromSource(S source) throws Exception;
 
     /**
      * Sets the property to map to in {@code target}.
      * @param target the object of type {@link T} to set the property to
      * @param targetProperty the property of type {@link TP} to map in {@code target}
+     * @throws Exception if the property cannot be mapped to {@code target} for any reason.
      */
-    protected abstract void setPropertyToTarget(T target, TP targetProperty);
+    protected abstract void setPropertyToTarget(T target, TP targetProperty) throws Exception;
 
     /**
      * Converts the {@code sourceProperty} to the {@code targetProperty} and returns the latter.
      * @param sourceProperty the property of type {@link SP} to convert
      * @return the property of type {@link TP} to convert to
+     * @throws Exception if property conversion fails for any reason.
      */
-    protected abstract TP convert(SP sourceProperty);
+    protected abstract TP convert(SP sourceProperty) throws Exception;
 }

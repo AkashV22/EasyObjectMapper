@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SourceToTargetPropertyMapperTest {
     @Test
-    public void testMapper() {
+    public void testMapper() throws Exception {
         SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper =
                 new SourceToTargetPropertyMapper<Source, Integer, Target, String>() {
             @Override

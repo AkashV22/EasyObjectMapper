@@ -31,9 +31,10 @@ public abstract class SimplePropertyMapper<S, T, P> extends SourceToTargetProper
      * which will also be the {@code targetProperty} as a result.
      * @param sourceProperty the property of type {@link P} to return
      * @return the property of type {@link P} to map in {@code target}
+     * @throws Exception if property conversion fails for any reason.
      */
     @Override
-    protected P convert(P sourceProperty){
+    protected P convert(P sourceProperty) throws Exception {
         return sourceProperty;
     }
 }
