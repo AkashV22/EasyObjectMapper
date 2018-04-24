@@ -23,6 +23,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AddSingleToCollectionPropertyMapperTest {
     @Test
@@ -57,6 +58,72 @@ public class AddSingleToCollectionPropertyMapperTest {
         testMapper(
                 createMapper(true),
                 Collections.singletonList("10")
+        );
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfGetPropertyFromSourceThrowsException() {
+        mapAndAssertThrows(
+                new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
+                    @Override
+                    protected Integer getPropertyFromSource(Source source) throws Exception {
+                        throw new Exception();
+                    }
+
+                    @Override
+                    protected Collection<String> getPropertyFromTarget(Target target) {
+                        return target.getTargetProperty();
+                    }
+
+                    @Override
+                    protected String convert(Integer sourceProperty) {
+                        return sourceProperty.toString();
+                    }
+                }
+        );
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfGetPropertyFromTargetThrowsException() {
+        mapAndAssertThrows(
+                new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
+                    @Override
+                    protected Integer getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected Collection<String> getPropertyFromTarget(Target target) throws Exception {
+                        throw new Exception();
+                    }
+
+                    @Override
+                    protected String convert(Integer sourceProperty) {
+                        return sourceProperty.toString();
+                    }
+                }
+        );
+    }
+
+    @Test
+    public void testMapperThrowsExceptionIfConvertThrowsException() {
+        mapAndAssertThrows(
+                new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
+                    @Override
+                    protected Integer getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected Collection<String> getPropertyFromTarget(Target target) {
+                        return target.getTargetProperty();
+                    }
+
+                    @Override
+                    protected String convert(Integer sourceProperty) throws Exception {
+                        throw new Exception();
+                    }
+                }
         );
     }
 
@@ -98,6 +165,13 @@ public class AddSingleToCollectionPropertyMapperTest {
         mapper.map(source, target);
 
         assertEquals(expectedTargetPropertyValue, target.getTargetProperty());
+    }
+
+    private void mapAndAssertThrows(AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper) {
+        Source source = new Source(10);
+        Target target = new Target();
+
+        assertThrows(Exception.class, () -> mapper.map(source, target));
     }
 
     private static class Source {
