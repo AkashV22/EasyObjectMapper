@@ -39,7 +39,8 @@
     </developers>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.compiler.version>9</java.compiler.version>
+        <java.release.version>8</java.release.version>
         <junit.jupiter.version>5.1.0</junit.jupiter.version>
     </properties>
 
@@ -64,9 +65,31 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <release>${java.compiler.version}</release>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>base-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>module-info.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <jdkToolchain>
+                        <version>${java.compiler.version}</version>
+                    </jdkToolchain>
+                    <source>${java.compiler.version}</source>
+                    <release>${java.release.version}</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -81,6 +104,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <jdkToolchain>
+                        <version>${java.compiler.version}</version>
+                    </jdkToolchain>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
