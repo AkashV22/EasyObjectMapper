@@ -146,7 +146,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereSetPropertyToTargetIsNotImplemented() throws Exception {
+    public void testMapperWhereSetPropertyToTargetIsNotImplemented() {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         true,
@@ -168,7 +168,7 @@ public class SimpleObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereGetPropertyToTargetIsNotImplemented() throws Exception {
+    public void testMapperWhereGetPropertyToTargetIsNotImplemented() {
         SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
                 new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
                         false,
@@ -188,6 +188,49 @@ public class SimpleObjectPropertyMapperTest {
         testMapperThrowsUnsupportedOperationException(mapper, true);
     }
 
+    @Test
+    public void testMapperWhereSetPropertyToTargetThrowsException() {
+        SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
+                new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
+                        true,
+                        getInnerMapper()
+                ) {
+                    @Override
+                    protected InnerObjectProperty getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, InnerObjectProperty targetProperty)
+                            throws Exception {
+                        throw new Exception();
+                    }
+                };
+
+        testMapperThrowsException(mapper, false);
+    }
+
+    @Test
+    public void testMapperWhereGetPropertyToTargetThrowsException() {
+        SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper =
+                new SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty>(
+                        false,
+                        getInnerMapper()
+                ) {
+                    @Override
+                    protected InnerObjectProperty getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected InnerObjectProperty getPropertyFromTarget(Target target) throws Exception {
+                        throw new Exception();
+                    }
+                };
+
+        testMapperThrowsException(mapper, true);
+    }
+
     private Mapper<InnerObjectProperty, InnerObjectProperty> getInnerMapper() {
         return (source, target) -> target.setInnerProperty(source.getInnerProperty());
     }
@@ -196,24 +239,41 @@ public class SimpleObjectPropertyMapperTest {
             SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
             boolean setTargetPropertyToNewInnerObjectProperty
     ) throws Exception {
-        testMapper(setTargetPropertyToNewInnerObjectProperty, ((source, target) -> {
-            mapper.map(source, target);
-            assertEquals(10, target.getTargetProperty().getInnerProperty());
-        }));
+        Target target = createSourceAndTargetThenMap(mapper, setTargetPropertyToNewInnerObjectProperty);
+
+        assertEquals(10, target.getTargetProperty().getInnerProperty());
     }
 
     private void testMapperThrowsUnsupportedOperationException(
             SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
             boolean setTargetPropertyToNewInnerObjectProperty
-    ) throws Exception {
-        testMapper(setTargetPropertyToNewInnerObjectProperty, ((source, target) -> {
-            assertThrows(UnsupportedOperationException.class, () -> mapper.map(source, target));
-        }));
+    ) {
+        Class<UnsupportedOperationException> expectedType = UnsupportedOperationException.class;
+
+        testMapperThrowsException(mapper, setTargetPropertyToNewInnerObjectProperty, expectedType);
     }
 
-    private void testMapper(
+    private void testMapperThrowsException(
+            SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
+            boolean setTargetPropertyToNewInnerObjectProperty
+    ) {
+        testMapperThrowsException(mapper, setTargetPropertyToNewInnerObjectProperty, Exception.class);
+    }
+
+    private <T extends Exception> void testMapperThrowsException(
+            SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
             boolean setTargetPropertyToNewInnerObjectProperty,
-            BiConsumerThatThrows<Source, Target> mapAndAssert
+            Class<T> expectedType
+    ) {
+        assertThrows(
+                expectedType,
+                () -> createSourceAndTargetThenMap(mapper, setTargetPropertyToNewInnerObjectProperty)
+        );
+    }
+
+    private Target createSourceAndTargetThenMap(
+            SimpleObjectPropertyMapper<Source, Target, InnerObjectProperty> mapper,
+            boolean setTargetPropertyToNewInnerObjectProperty
     ) throws Exception {
         Source source = new Source(new InnerObjectProperty(10));
         Target target = new Target();
@@ -222,7 +282,9 @@ public class SimpleObjectPropertyMapperTest {
             target.setTargetProperty(new InnerObjectProperty());
         }
 
-        mapAndAssert.accept(source, target);
+        mapper.map(source, target);
+
+        return target;
     }
 
     private static class Source {

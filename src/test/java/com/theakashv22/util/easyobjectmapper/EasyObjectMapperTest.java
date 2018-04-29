@@ -24,11 +24,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EasyObjectMapperTest {
     @Test
     public void testMapperUsingVarargConstructor() throws Exception {
         Collection<Mapper<Source, Target>> innerMappers = createInnerMappers();
+
         @SuppressWarnings({"unchecked", "SuspiciousToArrayCall"})
         Mapper<Source, Target>[] innerMapperArr = (Mapper<Source, Target>[]) innerMappers.toArray(new Mapper[0]);
 
@@ -38,6 +40,28 @@ public class EasyObjectMapperTest {
     @Test
     public void testMapperUsingCollectionConstructor() throws Exception {
         testMapper(new EasyObjectMapper<>(createInnerMappers()));
+    }
+
+    @Test
+    public void testMapperThrowsExceptionUsingVarargConstructor() {
+        Collection<Mapper<Source, Target>> innerMappers = createInnerMappersWithExceptionMapper();
+
+        @SuppressWarnings({"unchecked", "SuspiciousToArrayCall"})
+        Mapper<Source, Target>[] innerMapperArr = (Mapper<Source, Target>[]) innerMappers.toArray(new Mapper[0]);
+
+        testMapperThrowsException(new EasyObjectMapper<>(innerMapperArr));
+    }
+
+    @Test
+    public void testMapperThrowsExceptionUsingCollectionConstructor() {
+        testMapperThrowsException(new EasyObjectMapper<>(createInnerMappersWithExceptionMapper()));
+    }
+
+    private Collection<Mapper<Source, Target>> createInnerMappersWithExceptionMapper() {
+        Collection<Mapper<Source, Target>> innerMappers = new ArrayList<>(createInnerMappers());
+        innerMappers.add((source1, target1) -> { throw new Exception(); });
+
+        return innerMappers;
     }
 
     private Collection<Mapper<Source, Target>> createInnerMappers() {
@@ -113,14 +137,24 @@ public class EasyObjectMapperTest {
     }
 
     private void testMapper(EasyObjectMapper<Source, Target> mapper) throws Exception {
+        Target target = createSourceAndTargetThenMap(mapper);
+
+        assertEquals("10", target.getInnerTarget().getStringProp());
+        assertEquals(Collections.singletonList("1.1"), target.getInnerTarget().getListProp());
+        assertEquals(15, target.getInnerObjectProperty().getIntProperty());
+    }
+
+    private void testMapperThrowsException(EasyObjectMapper<Source, Target> mapper) {
+        assertThrows(Exception.class, () -> createSourceAndTargetThenMap(mapper));
+    }
+
+    private Target createSourceAndTargetThenMap(EasyObjectMapper<Source, Target> mapper) throws Exception {
         Source source = new Source(new InnerSource(10, 1.1), new InnerObjectProperty(15));
         Target target = new Target();
 
         mapper.map(source, target);
 
-        assertEquals("10", target.getInnerTarget().getStringProp());
-        assertEquals(Collections.singletonList("1.1"), target.getInnerTarget().getListProp());
-        assertEquals(15, target.getInnerObjectProperty().getIntProperty());
+        return target;
     }
 
     private class Source {

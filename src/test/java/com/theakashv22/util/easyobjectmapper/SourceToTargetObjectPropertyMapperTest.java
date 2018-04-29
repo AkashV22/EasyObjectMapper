@@ -156,7 +156,7 @@ public class SourceToTargetObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereConvertIsNotImplemented() throws Exception {
+    public void testMapperWhereConvertIsNotImplemented() {
         SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper =
                 new SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget>(
                         true,
@@ -182,7 +182,7 @@ public class SourceToTargetObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereSetPropertyToTargetIsNotImplemented() throws Exception {
+    public void testMapperWhereSetPropertyToTargetIsNotImplemented() {
         SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper =
                 new SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget>(
                         true,
@@ -208,7 +208,7 @@ public class SourceToTargetObjectPropertyMapperTest {
     }
 
     @Test
-    public void testMapperWhereGetPropertyToTargetIsNotImplemented() throws Exception {
+    public void testMapperWhereGetPropertyToTargetIsNotImplemented() {
         SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper =
                 new SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget>(
                         false,
@@ -227,6 +227,78 @@ public class SourceToTargetObjectPropertyMapperTest {
 
         testMapperThrowsUnsupportedOperationException(mapper, true);
     }
+    @Test
+    public void testMapperWhereConvertThrowsException() {
+        SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper =
+                new SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget>(
+                        true,
+                        getInnerMapper()
+                ) {
+                    @Override
+                    protected InnerSource getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, InnerTarget targetProperty) {
+                        target.setTargetProperty(targetProperty);
+                    }
+
+                    @Override
+                    protected InnerTarget convert(InnerSource sourceProperty) throws Exception {
+                        throw new Exception();
+                    }
+                };
+
+        testMapperThrowsException(mapper, false);
+    }
+
+    @Test
+    public void testMapperWhereSetPropertyToTargetThrowsException() {
+        SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper =
+                new SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget>(
+                        true,
+                        getInnerMapper()
+                ) {
+                    @Override
+                    protected InnerSource getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected void setPropertyToTarget(Target target, InnerTarget targetProperty) throws Exception {
+                        throw new Exception();
+                    }
+
+                    @Override
+                    protected InnerTarget convert(InnerSource sourceProperty) {
+                        return sourceProperty.createInnerTarget();
+                    }
+                };
+
+        testMapperThrowsException(mapper, false);
+    }
+
+    @Test
+    public void testMapperWhereGetPropertyToTargetThrowsException() {
+        SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper =
+                new SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget>(
+                        false,
+                        getInnerMapper()
+                ) {
+                    @Override
+                    protected InnerSource getPropertyFromSource(Source source) {
+                        return source.getSourceProperty();
+                    }
+
+                    @Override
+                    protected InnerTarget getPropertyFromTarget(Target target) throws Exception {
+                        throw new Exception();
+                    }
+                };
+
+        testMapperThrowsException(mapper, true);
+    }
 
     private Mapper<InnerSource, InnerTarget> getInnerMapper() {
         return (source, target) -> target.setTargetProperty(String.valueOf(source.getSourceProperty()));
@@ -236,24 +308,35 @@ public class SourceToTargetObjectPropertyMapperTest {
             SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper,
             boolean setTargetPropertyToNewInnerTarget
     ) throws Exception {
-        testMapper(setTargetPropertyToNewInnerTarget, ((source, target) -> {
-            mapper.map(source, target);
-            assertEquals("10", target.getTargetProperty().getTargetProperty());
-        }));
+        Target target = createSourceAndTargetThenMap(mapper, setTargetPropertyToNewInnerTarget);
+        assertEquals("10", target.getTargetProperty().getTargetProperty());
     }
 
     private void testMapperThrowsUnsupportedOperationException(
             SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper,
             boolean setTargetPropertyToNewInnerTarget
-    ) throws Exception {
-        testMapper(setTargetPropertyToNewInnerTarget, ((source, target) -> {
-            assertThrows(UnsupportedOperationException.class, () -> mapper.map(source, target));
-        }));
+    ) {
+        testMapperThrowsException(mapper, setTargetPropertyToNewInnerTarget, UnsupportedOperationException.class);
     }
 
-    private void testMapper(
+    private void testMapperThrowsException(
+            SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper,
+            boolean setTargetPropertyToNewInnerTarget
+    ) {
+        testMapperThrowsException(mapper, setTargetPropertyToNewInnerTarget, Exception.class);
+    }
+
+    private <T extends Exception> void testMapperThrowsException(
+            SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper,
             boolean setTargetPropertyToNewInnerTarget,
-            BiConsumerThatThrows<Source, Target> mapAndAssert
+            Class<T> expectedType
+    ) {
+        assertThrows(expectedType, () -> createSourceAndTargetThenMap(mapper, setTargetPropertyToNewInnerTarget));
+    }
+
+    private Target createSourceAndTargetThenMap(
+            SourceToTargetObjectPropertyMapper<Source, InnerSource, Target, InnerTarget> mapper,
+            boolean setTargetPropertyToNewInnerTarget
     ) throws Exception {
         Source source = new Source(new InnerSource(10));
         Target target = new Target();
@@ -262,7 +345,9 @@ public class SourceToTargetObjectPropertyMapperTest {
             target.setTargetProperty(new InnerTarget());
         }
 
-        mapAndAssert.accept(source, target);
+        mapper.map(source, target);
+
+        return target;
     }
 
     private static class Source {

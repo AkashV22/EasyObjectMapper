@@ -58,7 +58,7 @@ public class SimplePropertyMapperTest {
                     }
                 };
 
-        mapAndAssertThrows(mapper);
+        testMapperThrowsException(mapper);
     }
 
     @Test
@@ -76,10 +76,10 @@ public class SimplePropertyMapperTest {
                     }
                 };
 
-        mapAndAssertThrows(mapper);
+        testMapperThrowsException(mapper);
     }
 
-    private void mapAndAssertThrows(SimplePropertyMapper<Source, Target, String> mapper) {
+    private void testMapperThrowsException(SimplePropertyMapper<Source, Target, String> mapper) {
         assertThrows(Exception.class, () -> createSourceAndTargetThenMap(mapper));
     }
 

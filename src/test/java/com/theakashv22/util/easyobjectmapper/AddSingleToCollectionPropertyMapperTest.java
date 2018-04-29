@@ -63,7 +63,7 @@ public class AddSingleToCollectionPropertyMapperTest {
 
     @Test
     public void testMapperThrowsExceptionIfGetPropertyFromSourceThrowsException() {
-        mapAndAssertThrows(
+        testMapperThrowsException(
                 new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
                     @Override
                     protected Integer getPropertyFromSource(Source source) throws Exception {
@@ -85,7 +85,7 @@ public class AddSingleToCollectionPropertyMapperTest {
 
     @Test
     public void testMapperThrowsExceptionIfGetPropertyFromTargetThrowsException() {
-        mapAndAssertThrows(
+        testMapperThrowsException(
                 new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
                     @Override
                     protected Integer getPropertyFromSource(Source source) {
@@ -107,7 +107,7 @@ public class AddSingleToCollectionPropertyMapperTest {
 
     @Test
     public void testMapperThrowsExceptionIfConvertThrowsException() {
-        mapAndAssertThrows(
+        testMapperThrowsException(
                 new AddSingleToCollectionPropertyMapper<Source, Integer, Target, String>() {
                     @Override
                     protected Integer getPropertyFromSource(Source source) {
@@ -167,7 +167,7 @@ public class AddSingleToCollectionPropertyMapperTest {
         assertEquals(expectedTargetPropertyValue, target.getTargetProperty());
     }
 
-    private void mapAndAssertThrows(AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper) {
+    private void testMapperThrowsException(AddSingleToCollectionPropertyMapper<Source, Integer, Target, String> mapper) {
         Source source = new Source(10);
         Target target = new Target();
 

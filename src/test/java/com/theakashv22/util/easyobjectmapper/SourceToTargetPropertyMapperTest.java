@@ -67,7 +67,7 @@ public class SourceToTargetPropertyMapperTest {
                     }
                 };
 
-        mapAndAssertThrows(mapper);
+        testMapperThrowsException(mapper);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class SourceToTargetPropertyMapperTest {
                     }
                 };
 
-        mapAndAssertThrows(mapper);
+        testMapperThrowsException(mapper);
     }
 
     @Test
@@ -113,10 +113,10 @@ public class SourceToTargetPropertyMapperTest {
                     }
                 };
 
-        mapAndAssertThrows(mapper);
+        testMapperThrowsException(mapper);
     }
 
-    private void mapAndAssertThrows(SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper) {
+    private void testMapperThrowsException(SourceToTargetPropertyMapper<Source, Integer, Target, String> mapper) {
         assertThrows(Exception.class, () -> createSourceAndTargetThenMap(mapper));
     }
 
