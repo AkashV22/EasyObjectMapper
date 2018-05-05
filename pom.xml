@@ -85,9 +85,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jdkToolchain>
-                        <version>${java.compiler.version}</version>
-                    </jdkToolchain>
                     <source>${java.compiler.version}</source>
                     <release>${java.release.version}</release>
                 </configuration>
@@ -104,11 +101,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <jdkToolchain>
-                        <version>${java.compiler.version}</version>
-                    </jdkToolchain>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -123,6 +115,25 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>${java.compiler.version}</version>
+                        </jdk>
+                    </toolchains>
+                </configuration>
             </plugin>
 
             <plugin>
